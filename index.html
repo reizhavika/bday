@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 25px;
+      text-align: center;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff4d6d, #ff758f);
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    /* FOTO */
+    .slideshow, .couple-slideshow {
+      position: relative;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slideshow {
+      width: 160px;
+      height: 160px;
+    }
+
+    .couple-slideshow {
+      width: 260px;
+      height: 260px;
+    }
+
+    .slideshow img,
+    .couple-slideshow img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .slideshow img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #ff4d6d;
+    }
+
+    .couple-slideshow img {
+      width: 260px;
+      height: 260px;
+      border-radius: 25px;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    img.active {
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* TYPING */
+    .typing {
+      color: #ff4d6d;
+      font-weight: bold;
+      font-size: 1.05em;
+      line-height: 1.6;
+      min-height: 150px;
+      white-space: pre-line;
+    }
+
+    /* AFTER EFFECT */
+    .after {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: 1s ease;
+    }
+
+    .after.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* HEARTS */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AWAL -->
+  <div class="card" id="awal">
+    <h1>🎂 Happy Birthday 💖</h1>
+
+    <div class="slideshow">
+      <img src="foto1.jpg" class="active">
+      <img src="foto2.jpg">
+      <img src="foto3.jpg">
+    </div>
+
+    <button onclick="showKejutan()">Klik untuk kejutan 🎁</button>
+  </div>
+
+  <!-- KEJUTAN -->
+  <div class="card hidden" id="kejutanPage">
+    <h1>💗 Untuk Kamu 💗</h1>
+
+    <div class="couple-slideshow">
+      <img src="couple1.jpg" class="active">
+      <img src="couple2.jpg">
+      <img src="couple3.jpg">
+      <img src="couple4.jpg">
+    </div>
+
+    <div id="typingText" class="typing"></div>
+
+    <div id="afterEffect" class="after">
+      <p>💞 Aku Sayang Kamu Selalu 💞</p>
+    </div>
+  </div>
+
+  <audio id="musik" src="music.mp3"></audio>
+
+  <script>
+    const awal = document.getElementById("awal");
+    const kejutanPage = document.getElementById("kejutanPage");
+    const musik = document.getElementById("musik");
+    const typingText = document.getElementById("typingText");
+
+    /* SLIDESHOW */
+    let a = 0, b = 0;
+    const fotoAwal = document.querySelectorAll(".slideshow img");
+    const fotoCouple = document.querySelectorAll(".couple-slideshow img");
+
+    setInterval(() => {
+      fotoAwal[a].classList.remove("active");
+      a = (a + 1) % fotoAwal.length;
+      fotoAwal[a].classList.add("active");
+    }, 2500);
+
+    setInterval(() => {
+      fotoCouple[b].classList.remove("active");
+      b = (b + 1) % fotoCouple.length;
+      fotoCouple[b].classList.add("active");
+    }, 3000);
+
+    /* TYPING */
+    const text =
+`Terima kasih sudah hadir dalam hidupku 🤍
+Setiap hari bersamamu selalu berarti 💕
+Di hari ulang tahunmu ini,
+aku berharap kamu selalu bahagia,
+sehat, dan dikelilingi cinta ✨
+Aku bersyukur bisa berjalan bersamamu 🌹`;
+
+    let i = 0;
+    function typeText() {
+      if (i < text.length) {
+        typingText.innerHTML += text.charAt(i++);
+        setTimeout(typeText, 45);
+      } else {
+        document.getElementById("afterEffect").classList.add("show");
+        startHearts();
+      }
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }, 300);
+    }
+
+    function showKejutan() {
+      awal.classList.add("hidden");
+      kejutanPage.classList.remove("hidden");
+      musik.play();
+      typeText();
+    }
+  </script>
+
+</body>
+</html>
