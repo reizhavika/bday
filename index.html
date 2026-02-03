@@ -18,7 +18,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
 
     .card {
@@ -47,6 +46,15 @@
       color: white;
       font-size: 1em;
       cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .hidden {
+      display: none;
     }
 
     /* FOTO */
@@ -98,8 +106,11 @@
       opacity: 1;
     }
 
-    .hidden {
-      display: none;
+    /* AREA SCROLL */
+    .scroll-area {
+      max-height: 75vh;
+      overflow-y: auto;
+      padding-right: 5px;
     }
 
     /* TYPING */
@@ -107,34 +118,14 @@
       color: #ff4d6d;
       font-weight: bold;
       font-size: 1.05em;
-      line-height: 1.6;
-      min-height: 150px;
+      line-height: 1.7;
+      min-height: 160px;
       white-space: pre-line;
+      margin-top: 15px;
     }
 
-    /* AFTER EFFECT */
-    .after {
-      opacity: 0;
-      transform: scale(0.8);
-      transition: 1s ease;
-    }
-
-    .after.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* HEARTS */
-    .heart {
-      position: fixed;
-      bottom: -20px;
-      font-size: 20px;
-      animation: float 5s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-120vh); opacity: 0; }
+    .next-btn {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -145,22 +136,24 @@
 </head>
 <body>
 
-  <!-- AWAL -->
-  <div class="card" id="awal">
-    <h1>🎂 Happy Birthday 💖</h1>
+<!-- HALAMAN AWAL -->
+<div class="card" id="awal">
+  <h1>🎂 Happy Birthday 💖</h1>
 
-    <div class="slideshow">
-      <img src="foto1.jpg" class="active">
-      <img src="foto2.jpg">
-      <img src="foto3.jpg">
-    </div>
-
-    <button onclick="showKejutan()">Klik untuk kejutan 🎁</button>
+  <div class="slideshow">
+    <img src="foto1.jpg" class="active">
+    <img src="foto2.jpg">
+    <img src="foto3.jpg">
   </div>
 
-  <!-- KEJUTAN -->
-  <div class="card hidden" id="kejutanPage">
-    <h1>💗 Untuk Kamu 💗</h1>
+  <button onclick="showKejutan()">Klik untuk kejutan 🎁</button>
+</div>
+
+<!-- HALAMAN KEJUTAN -->
+<div class="card hidden" id="kejutanPage">
+  <h1>💗 Untuk Kamu 💗</h1>
+
+  <div class="scroll-area" id="scrollArea">
 
     <div class="couple-slideshow">
       <img src="couple1.jpg" class="active">
@@ -171,74 +164,93 @@
 
     <div id="typingText" class="typing"></div>
 
-    <div id="afterEffect" class="after">
-      <p>💞 Aku Sayang Kamu Selalu 💞</p>
-    </div>
+    <button id="nextBtn" class="next-btn" onclick="nextSlide()">
+      Lanjut 💌
+    </button>
+
   </div>
+</div>
 
-  <audio id="musik" src="music.mp3"></audio>
+<audio id="musik" src="music.mp3"></audio>
 
-  <script>
-    const awal = document.getElementById("awal");
-    const kejutanPage = document.getElementById("kejutanPage");
-    const musik = document.getElementById("musik");
-    const typingText = document.getElementById("typingText");
+<script>
+  const awal = document.getElementById("awal");
+  const kejutanPage = document.getElementById("kejutanPage");
+  const typingText = document.getElementById("typingText");
+  const nextBtn = document.getElementById("nextBtn");
+  const scrollArea = document.getElementById("scrollArea");
+  const musik = document.getElementById("musik");
 
-    /* SLIDESHOW */
-    let a = 0, b = 0;
-    const fotoAwal = document.querySelectorAll(".slideshow img");
-    const fotoCouple = document.querySelectorAll(".couple-slideshow img");
+  /* SLIDESHOW */
+  let a = 0, b = 0;
+  const fotoAwal = document.querySelectorAll(".slideshow img");
+  const fotoCouple = document.querySelectorAll(".couple-slideshow img");
 
-    setInterval(() => {
-      fotoAwal[a].classList.remove("active");
-      a = (a + 1) % fotoAwal.length;
-      fotoAwal[a].classList.add("active");
-    }, 2500);
+  setInterval(() => {
+    fotoAwal[a].classList.remove("active");
+    a = (a + 1) % fotoAwal.length;
+    fotoAwal[a].classList.add("active");
+  }, 2500);
 
-    setInterval(() => {
-      fotoCouple[b].classList.remove("active");
-      b = (b + 1) % fotoCouple.length;
-      fotoCouple[b].classList.add("active");
-    }, 3000);
+  setInterval(() => {
+    fotoCouple[b].classList.remove("active");
+    b = (b + 1) % fotoCouple.length;
+    fotoCouple[b].classList.add("active");
+  }, 3000);
 
-    /* TYPING */
-    const text =
+  /* TEKS PER SLIDE */
+  const texts = [
 `Terima kasih sudah hadir dalam hidupku 🤍
 Setiap hari bersamamu selalu berarti 💕
 Di hari ulang tahunmu ini,
-aku berharap kamu selalu bahagia,
-sehat, dan dikelilingi cinta ✨
-Aku bersyukur bisa berjalan bersamamu 🌹`;
+aku berharap kamu selalu bahagia ✨`,
 
-    let i = 0;
-    function typeText() {
-      if (i < text.length) {
-        typingText.innerHTML += text.charAt(i++);
-        setTimeout(typeText, 45);
-      } else {
-        document.getElementById("afterEffect").classList.add("show");
-        startHearts();
-      }
+`Semoga langkahmu selalu dimudahkan 🌷
+Mimpimu satu per satu tercapai
+Dan aku berharap,
+aku masih bisa menemanimu 🤍`,
+
+`Apa pun yang terjadi nanti,
+ingatlah…
+kamu adalah seseorang
+yang sangat berharga bagiku 💖`
+  ];
+
+  let slideIndex = 0;
+  let charIndex = 0;
+
+  function typeText() {
+    if (charIndex < texts[slideIndex].length) {
+      typingText.innerHTML += texts[slideIndex].charAt(charIndex++);
+      setTimeout(typeText, 70); // kecepatan typing
+    } else {
+      nextBtn.style.display = "block";
+      scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: "smooth" });
     }
+  }
 
-    function startHearts() {
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
-      }, 300);
-    }
+  function nextSlide() {
+    slideIndex++;
 
-    function showKejutan() {
-      awal.classList.add("hidden");
-      kejutanPage.classList.remove("hidden");
-      musik.play();
+    if (slideIndex < texts.length) {
+      typingText.innerHTML = "";
+      charIndex = 0;
+      nextBtn.style.display = "none";
       typeText();
+    } else {
+      // SLIDE TERAKHIR → TOMBOL DIKUNCI
+      nextBtn.innerText = "💞I LOVE YOU SAYANG💞";
+      nextBtn.disabled = true;
     }
-  </script>
+  }
+
+  function showKejutan() {
+    awal.classList.add("hidden");
+    kejutanPage.classList.remove("hidden");
+    musik.play();
+    typeText();
+  }
+</script>
 
 </body>
 </html>
