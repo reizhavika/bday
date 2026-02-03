@@ -38,19 +38,20 @@
     }
 
     button {
-      margin-top: 20px;
-      padding: 14px 30px;
+      margin-top: 18px;
+      padding: 10px 22px;
       border: none;
-      border-radius: 30px;
+      border-radius: 20px;
       background: linear-gradient(135deg, #ff4d6d, #ff758f);
       color: white;
-      font-size: 1em;
+      font-size: 0.9em;
       cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: default;
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
     }
 
     .hidden {
@@ -106,13 +107,6 @@
       opacity: 1;
     }
 
-    /* AREA SCROLL */
-    .scroll-area {
-      max-height: 75vh;
-      overflow-y: auto;
-      padding-right: 5px;
-    }
-
     /* TYPING */
     .typing {
       color: #ff4d6d;
@@ -153,22 +147,18 @@
 <div class="card hidden" id="kejutanPage">
   <h1>💗 Untuk Kamu 💗</h1>
 
-  <div class="scroll-area" id="scrollArea">
-
-    <div class="couple-slideshow">
-      <img src="couple1.jpg" class="active">
-      <img src="couple2.jpg">
-      <img src="couple3.jpg">
-      <img src="couple4.jpg">
-    </div>
-
-    <div id="typingText" class="typing"></div>
-
-    <button id="nextBtn" class="next-btn" onclick="nextSlide()">
-      Lanjut 💌
-    </button>
-
+  <div class="couple-slideshow">
+    <img src="couple1.jpg" class="active">
+    <img src="couple2.jpg">
+    <img src="couple3.jpg">
+    <img src="couple4.jpg">
   </div>
+
+  <div id="typingText" class="typing"></div>
+
+  <button id="nextBtn" class="next-btn" onclick="nextSlide()">
+    Lanjut 💌
+  </button>
 </div>
 
 <audio id="musik" src="music.mp3"></audio>
@@ -178,7 +168,6 @@
   const kejutanPage = document.getElementById("kejutanPage");
   const typingText = document.getElementById("typingText");
   const nextBtn = document.getElementById("nextBtn");
-  const scrollArea = document.getElementById("scrollArea");
   const musik = document.getElementById("musik");
 
   /* SLIDESHOW */
@@ -222,26 +211,20 @@ yang sangat berharga bagiku 💖`
   function typeText() {
     if (charIndex < texts[slideIndex].length) {
       typingText.innerHTML += texts[slideIndex].charAt(charIndex++);
-      setTimeout(typeText, 70); // kecepatan typing
+      setTimeout(typeText, 75);
     } else {
-      nextBtn.style.display = "block";
-      scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: "smooth" });
+      if (slideIndex < texts.length - 1) {
+        nextBtn.style.display = "block";
+      }
     }
   }
 
   function nextSlide() {
     slideIndex++;
-
-    if (slideIndex < texts.length) {
-      typingText.innerHTML = "";
-      charIndex = 0;
-      nextBtn.style.display = "none";
-      typeText();
-    } else {
-      // SLIDE TERAKHIR → TOMBOL DIKUNCI
-      nextBtn.innerText = "💞I LOVE YOU SAYANG💞";
-      nextBtn.disabled = true;
-    }
+    typingText.innerHTML = "";
+    charIndex = 0;
+    nextBtn.style.display = "none";
+    typeText();
   }
 
   function showKejutan() {
